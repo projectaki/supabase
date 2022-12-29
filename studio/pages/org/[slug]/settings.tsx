@@ -5,7 +5,6 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 
 import { Member, NextPageWithLayout, Organization, Project, Role, User } from 'types'
 import {
-  useFlag,
   useOrganizationDetail,
   useOrganizationRoles,
   useStore,
@@ -28,13 +27,7 @@ const OrgSettingsLayout = withAuth(
     const router = useRouter()
     const { slug } = useParams()
 
-    const { roles: allRoles } = useOrganizationRoles(slug)
-    const enableBillingOnlyReadOnly = useFlag('enableBillingOnlyReadOnlyRoles')
-    const roles = enableBillingOnlyReadOnly
-      ? allRoles
-      : (allRoles ?? []).filter((role) =>
-          ['Owner', 'Administrator', 'Developer'].includes(role.name)
-        )
+    const { roles } = useOrganizationRoles(slug)
 
     // [Refactor] Eventually move away from useLocalObservable
     const PageState: any = useLocalObservable(() => ({
